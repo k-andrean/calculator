@@ -1,24 +1,30 @@
 .container {
     display: flex;
     flex-direction: column;
+    max-width: fit-content;
+    max-height: fit-content;
 }
 
-.display,
+#displayDiv,
 .row {
     display: flex;
 }
 
-.display{
+#displayDiv{
 
-    flex-direction: row-reverse;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
+
+    text-align: right; /* Align text to the right */
+    overflow: hidden; /* Hide overflowing content */
+    white-space: nowrap;
+
     
-    min-height: 200px;
+    min-height: 150px;
 
     border: 1px solid black;
 
-    font-size: 40px;
+    font-size: 30px;
 
 
 }
@@ -30,7 +36,7 @@
 
 }
 
-.square.button{
+.square-button{
     
     display: flex;
     flex: 1;
@@ -40,6 +46,15 @@
     border: 1px solid black;
     
 
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
+}
+
+
+.square-button:hover{
+    background-color: blue;
+}
+
+.operator{
+    color: grey;
 }
