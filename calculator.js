@@ -1,30 +1,23 @@
-const add = (a, b) => a + b;
-const subtract = (a, b) => a - b;
-const multiply = (a, b) => a * b;
-const divide = (a, b) => {
-    if (b === 0) {
-        return "Division by zero is not allowed";
-    }
-    return a / b;
-};
-
-// function for performing math operation based on case condition
 function operate(num1, num2, operator) {
     switch (operator) {
         case 'add':
-            return add(num1, num2);
+            return +num1 + +num2; 
         case 'subtract':
-            return subtract(num1, num2);
+            return +num1 - +num2; 
         case 'multiply':
-            return multiply(num1, num2);
+            return +num1 * +num2;
         case 'divide':
-            return divide(num1, num2);
+            if (+num2 === 0) {
+                return "Division by zero error";
+            }
+            return (+num1 / +num2).toFixed(2);
         default:
             return "Invalid operator";
     }
 }
 
 
+// calculator button and display element
 const numberButtons = document.querySelectorAll('.number');
 const operatorButtons = document.querySelectorAll('.operator');
 const clearButton = document.querySelector('.clear');
@@ -32,6 +25,8 @@ const equalButton = document.querySelector('.equal');
 const mathDisplay = document.querySelector('.math-display');
 const resultDisplay = document.querySelector(`.result-display`);
 
+
+// initiating object for storing number and operator value clicked to perform math operation
 let clickedButton = {
     firstNumber: "",
     secondNumber: "",
@@ -43,7 +38,7 @@ let clickedButton = {
   };
 
   
-
+// function to handle different case according to value button clicked and storing necessary value inside clicked object
 function handleNumberButtonClick(e) {
   const numberValue = e.target.getAttribute('value');
 
@@ -55,6 +50,7 @@ function handleNumberButtonClick(e) {
         break;
     
     case clickedButton.firstOperator === "" && clickedButton.secondNumber === "":
+        // if next number and operator to process math has not been set, number button clicked will be appended to current number value
         clickedButton.firstNumber += numberValue;
         updateCalcDisplay(numberValue);
         break;
@@ -91,8 +87,6 @@ function handleNumberButtonClick(e) {
     }
 
 
-
-    console.log(clickedButton);
 }
 
 function handleOperatorButtonClick(e) {
@@ -106,6 +100,7 @@ function handleOperatorButtonClick(e) {
             break;
 
         case clickedButton.firstOperator !== "" && clickedButton.secondNumber === "":
+            // if next number has not been set, current operator value will change to current operator button clicked
             clickedButton.firstOperator = operatorValue;
             updateCalcDisplay(operatorValue);
             break;
@@ -120,9 +115,10 @@ function handleOperatorButtonClick(e) {
             updateCalcDisplay(operatorValue);
             break;
     }
-  // Update your UI or perform any other necessary operations
-  console.log(clickedButton);
+ 
 }
+
+
 
 function filterNumberOperatorObject(){
 
@@ -150,6 +146,7 @@ function filterNumberOperatorObject(){
 }
 
 
+// function for processing two number and a operator in math sequence until getting final result
 function getMathResult(){
 
     let firstResult, secondResult, finalResult;
@@ -164,23 +161,23 @@ function getMathResult(){
       
         case numLength === 3 && (operatorLength === 2 || operatorLength === 3):
           firstResult = operate(filteredNumberValues[0], filteredNumberValues[1], filteredOperatorValues[0]);
-          finalResult = operate(firstResult, filteredNumberValues[2], filteredOperatorValues[1]);
+          finalResult = operate(firstResult, filteredNumberValues[2], filteredOperatorValues[1]).toFixed(2);
           break;
       
         case numLength === 4 && operatorLength === 3:
           firstResult = operate(filteredNumberValues[0], filteredNumberValues[1], filteredOperatorValues[0]);
           secondResult = operate(firstResult, filteredNumberValues[2], filteredOperatorValues[1]);
-          finalResult = operate(secondResult, filteredNumberValues[3], filteredOperatorValues[2]);
+          finalResult = operate(secondResult, filteredNumberValues[3], filteredOperatorValues[2]).toFixed(2);
           break;
       
         default:
           console.log("Invalid input");
     }
       
-    console.log(finalResult);
     updateResultDisplay(finalResult);
 
 }
+
 
 
 // function for updating display based on user input
