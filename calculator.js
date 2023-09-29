@@ -1,19 +1,19 @@
-const add = (a, b) => +a + +b;
-const subtract = (a, b) => +a - +b;
-const multiply = (a, b) => +a * +b;
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
 const divide = (a, b) => {
-    if (+b === 0) {
+    if (b === 0) {
         return "Division by zero is not allowed";
     }
-    return +a / +b;
+    return a / b;
 };
 
-
+// function for performing math operation based on case condition
 function operate(num1, num2, operator) {
     switch (operator) {
         case 'add':
             return add(num1, num2);
-        case 'substract':
+        case 'subtract':
             return subtract(num1, num2);
         case 'multiply':
             return multiply(num1, num2);
@@ -25,15 +25,12 @@ function operate(num1, num2, operator) {
 }
 
 
-function updateCalcDisplay(){
-
-}
-
 const numberButtons = document.querySelectorAll('.number');
 const operatorButtons = document.querySelectorAll('.operator');
 const clearButton = document.querySelector('.clear');
 const equalButton = document.querySelector('.equal');
-const calcDisplay = document.getElementById('#displayDiv');
+const mathDisplay = document.querySelector('.math-display');
+const resultDisplay = document.querySelector(`.result-display`);
 
 let clickedButton = {
     firstNumber: "",
@@ -54,22 +51,42 @@ function handleNumberButtonClick(e) {
   switch (true) {
     case clickedButton.firstNumber === "":
         clickedButton.firstNumber = numberValue;
+        updateCalcDisplay(numberValue);
         break;
     
     case clickedButton.firstOperator === "" && clickedButton.secondNumber === "":
-        clickedButton.firstNumber = numberValue;
+        clickedButton.firstNumber += numberValue;
+        updateCalcDisplay(numberValue);
         break;
-    
-    case clickedButton.secondOperator === "" && clickedButton.thirdNumber === "":
+
+    case clickedButton.firstOperator !== "" && clickedButton.secondNumber === "":
         clickedButton.secondNumber = numberValue;
+        updateCalcDisplay(numberValue);
+        break;
+
+    case clickedButton.secondOperator === "" && clickedButton.thirdNumber === "":
+        clickedButton.secondNumber += numberValue;
+        updateCalcDisplay(numberValue);
         break;
     
-    case clickedButton.thirdOperator === "":
+    case clickedButton.secondOperator !== "" && clickedButton.thirdNumber === "":
         clickedButton.thirdNumber = numberValue;
+        updateCalcDisplay(numberValue);
+        break;
+
+    case clickedButton.thirdOperator === "":
+        clickedButton.thirdNumber += numberValue;
+        updateCalcDisplay(numberValue);
+        break;
+    
+    case clickedButton.thirdOperator !== "" && clickedButton.fourthNumber === "":
+        clickedButton.fourthNumber = numberValue;
+        updateCalcDisplay(numberValue);
         break;
     
     default:
-        clickedButton.fourthNumber = numberValue;
+        clickedButton.fourthNumber += numberValue;
+        updateCalcDisplay(numberValue);
         break;
     }
 
@@ -85,27 +102,29 @@ function handleOperatorButtonClick(e) {
     switch (true) {
         case clickedButton.firstOperator === "":
             clickedButton.firstOperator = operatorValue;
+            updateCalcDisplay(operatorValue);
             break;
 
         case clickedButton.firstOperator !== "" && clickedButton.secondNumber === "":
             clickedButton.firstOperator = operatorValue;
+            updateCalcDisplay(operatorValue);
             break;
 
         case clickedButton.thirdNumber === "" && clickedButton.thirdOperator === "":
             clickedButton.secondOperator = operatorValue;
+            updateCalcDisplay(operatorValue);
             break;
     
         default:
             clickedButton.thirdOperator = operatorValue;
+            updateCalcDisplay(operatorValue);
             break;
     }
   // Update your UI or perform any other necessary operations
   console.log(clickedButton);
 }
 
-let firstResult, secondResult, finalResult;
-
-function getMathResult(){
+function filterNumberOperatorObject(){
 
     const numberValues = [
         clickedButton.firstNumber,
@@ -120,11 +139,23 @@ function getMathResult(){
         clickedButton.thirdOperator,
       ];
 
-    const filteredNumberValues = numberValues.filter((value) => value !== "");
-    const filteredOperatorValues = operatorValues.filter((value) => value !== "");
+    const filterNumberValue = numberValues.filter((value) => value !== "").map(parseFloat);
+    const filterOperatorValue = operatorValues.filter((value) => value !== "");
 
-    const numLength = filteredNumberValues.length;
-    const operatorLength = filteredOperatorValues.length;
+    const numberArrayLength = filterNumberValue.length;
+    const operatorArrayLength = filterOperatorValue.length;
+
+    return [filterNumberValue, filterOperatorValue, numberArrayLength, operatorArrayLength];
+
+}
+
+
+function getMathResult(){
+
+    let firstResult, secondResult, finalResult;
+
+    const[filteredNumberValues, filteredOperatorValues, numLength, operatorLength] = filterNumberOperatorObject();
+
 
     switch (true) {
         case numLength === 2 && (operatorLength === 1 || operatorLength === 2):
@@ -144,12 +175,44 @@ function getMathResult(){
       
         default:
           console.log("Invalid input");
-      }
+    }
       
-      console.log(finalResult);
-
+    console.log(finalResult);
+    updateResultDisplay(finalResult);
 
 }
+
+
+// function for updating display based on user input
+function updateCalcDisplay(value){
+    
+    switch (value) {
+        case 'add':
+          value = '+';
+          break;
+        case 'subtract':
+          value = '-';
+          break;
+        case 'multiply':
+          value = '*';
+          break;
+        case 'divide':
+          value = '÷';
+          break;
+        default:
+          value = value;
+      }
+
+    mathDisplay.textContent += `${value}`;
+    
+}
+
+function updateResultDisplay(result){
+    resultDisplay.textContent = "";
+    resultDisplay.textContent += `${result}`;
+}
+
+
 
   
   // Add event listeners to number buttons and operator buttons
@@ -171,6 +234,10 @@ function getMathResult(){
       secondOperator: "",
       thirdOperator: "",
     };
+
+
+    mathDisplay.textContent = "";
+    resultDisplay.textContent = "";
   
   });
  
