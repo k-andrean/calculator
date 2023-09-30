@@ -161,13 +161,13 @@ function getMathResult(){
       
         case numLength === 3 && (operatorLength === 2 || operatorLength === 3):
           firstResult = operate(filteredNumberValues[0], filteredNumberValues[1], filteredOperatorValues[0]);
-          finalResult = operate(firstResult, filteredNumberValues[2], filteredOperatorValues[1]).toFixed(2);
+          finalResult = operate(firstResult, filteredNumberValues[2], filteredOperatorValues[1]);
           break;
       
         case numLength === 4 && operatorLength === 3:
           firstResult = operate(filteredNumberValues[0], filteredNumberValues[1], filteredOperatorValues[0]);
           secondResult = operate(firstResult, filteredNumberValues[2], filteredOperatorValues[1]);
-          finalResult = operate(secondResult, filteredNumberValues[3], filteredOperatorValues[2]).toFixed(2);
+          finalResult = operate(secondResult, filteredNumberValues[3], filteredOperatorValues[2]);
           break;
       
         default:
