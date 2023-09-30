@@ -1,22 +1,3 @@
-function operate(num1, num2, operator) {
-    switch (operator) {
-        case '+':
-            return +num1 + +num2; 
-        case '-':
-            return +num1 - +num2; 
-        case '*':
-            return (+num1 * +num2).toFixed(2);
-        case '÷':
-            if (+num2 === 0) {
-                return "Division by zero error";
-            }
-            return (+num1 / +num2).toFixed(2);
-        default:
-            return "Invalid operator";
-    }
-}
-
-
 // calculator button and display element
 const numberButtons = document.querySelectorAll('.number');
 const operatorButtons = document.querySelectorAll('.operator');
@@ -27,8 +8,27 @@ const resultDisplay = document.querySelector(`.result-display`);
 const inputButton = document.querySelector(`.input`);
 
 
-  // Function to process the input string and extract numbers and operators
-  function processInputString(inputString) {
+function operate(num1, num2, operator) {
+  switch (operator) {
+      case '+':
+          return +num1 + +num2; 
+      case '-':
+          return +num1 - +num2; 
+      case '*':
+          return (+num1 * +num2).toFixed(2);
+      case '÷':
+          if (+num2 === 0) {
+              return "Division by zero error";
+          }
+          return (+num1 / +num2).toFixed(2);
+      default:
+          return "Invalid operator";
+  }
+}
+
+
+  // Function to process the input string and extract numbers and operators into array
+function processInputString(inputString) {
     const numberArray = [];
     const operatorArray = [];
     let currentNumber = '';
@@ -44,23 +44,23 @@ const inputButton = document.querySelector(`.input`);
           currentNumber = '';
         }
   
-        // Push the operator to the operator array
         operatorArray.push(char);
       } else {
         // If the character is not a valid operator, add it to the current number
         currentNumber += char;
       }
-    }
-  
-    // Push the remaining number if there is any
+``  }
+    // push remaining number into the array if there is any 
     if (currentNumber !== '') {
       numberArray.push(currentNumber);
     }
   
+    
     return { numbers: numberArray, operators: operatorArray };
-  }
+}
 
-  function getUserInput() {
+
+function getUserInput() {
     const userInput = prompt('Enter a mathematical expression, use ÷ symbol for divide operation:');
     
     if (userInput === null || userInput.trim() === '') {
@@ -71,10 +71,8 @@ const inputButton = document.querySelector(`.input`);
     // Remove spaces from the user's input
     const sanitizedInput = userInput.replace(/\s+/g, '');
   
-    // Define a set of valid operators
     const validOperators = ['+', '-', '*', '÷'];
-  
-    // Define a regular expression to match valid numbers (0-9 and '.')
+
     const validNumericCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
   
     const isInputValid = sanitizedInput.split('').every(char => validOperators.includes(char) || validNumericCharacters.includes(char));
@@ -86,7 +84,9 @@ const inputButton = document.querySelector(`.input`);
   
   
     return sanitizedInput;
-  }
+
+}
+
 
 
 function filterNumberOperatorObject(string){
@@ -173,9 +173,7 @@ operatorButtons.forEach((button) => {
       updateCalcDisplay(operatorValue);
     });
   });
-
-  
-  
+    
 
 clearButton.addEventListener('click', () => {
     clickedButton = {
@@ -202,7 +200,7 @@ equalButton.addEventListener('click', () => {
     getMathResult(filteredNumberValues, filteredOperatorValues, numLength, operatorLength);
 });
   
-  
+// implement getting user input and returning result of math operation 
 inputButton.addEventListener('click', () => {
     
     const userInputString = getUserInput();
