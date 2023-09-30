@@ -60,13 +60,38 @@ const inputButton = document.querySelector(`.input`);
     return { numbers: numberArray, operators: operatorArray };
   }
 
-
-
-
-function filterNumberOperatorObject(){
+  function getUserInput() {
+    const userInput = prompt('Enter a mathematical expression, use ÷ symbol for divide operation:');
     
-    const inputString = mathDisplay.textContent; 
-    const { numbers, operators } = processInputString(inputString);
+    if (userInput === null || userInput.trim() === '') {
+      alert('No input provided. Please enter a valid expression.');
+      return;
+    }
+  
+    // Remove spaces from the user's input
+    const sanitizedInput = userInput.replace(/\s+/g, '');
+  
+    // Define a set of valid operators
+    const validOperators = ['+', '-', '*', '÷'];
+  
+    // Define a regular expression to match valid numbers (0-9 and '.')
+    const validNumericCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+  
+    const isInputValid = sanitizedInput.split('').every(char => validOperators.includes(char) || validNumericCharacters.includes(char));
+  
+    if (!isInputValid) {
+      alert('Invalid number or operator in the expression.');
+      return;
+    }
+  
+  
+    return sanitizedInput;
+  }
+
+
+function filterNumberOperatorObject(string){
+    
+    const { numbers, operators } = processInputString(string);
 
     const numberArrayLength = numbers.length;
     const operatorArrayLength = operators.length;
@@ -77,11 +102,9 @@ function filterNumberOperatorObject(){
 
 
 // function for processing two number and a operator in math sequence until getting final result
-function getMathResult(){
+function getMathResult(filteredNumberValues, filteredOperatorValues, numLength, operatorLength){
 
     let firstResult, secondResult, finalResult;
-
-    const[filteredNumberValues, filteredOperatorValues, numLength, operatorLength] = filterNumberOperatorObject();
 
 
     switch (true) {
@@ -91,13 +114,13 @@ function getMathResult(){
       
         case numLength === 3 && (operatorLength === 2 || operatorLength === 3):
           firstResult = operate(filteredNumberValues[0], filteredNumberValues[1], filteredOperatorValues[0]);
-          finalResult = operate(firstResult, filteredNumberValues[2], filteredOperatorValues[1]).toFixed(2);
+          finalResult = operate(firstResult, filteredNumberValues[2], filteredOperatorValues[1]);
           break;
       
         case numLength === 4 && operatorLength === 3:
           firstResult = operate(filteredNumberValues[0], filteredNumberValues[1], filteredOperatorValues[0]);
           secondResult = operate(firstResult, filteredNumberValues[2], filteredOperatorValues[1]);
-          finalResult = operate(secondResult, filteredNumberValues[3], filteredOperatorValues[2]).toFixed(2);
+          finalResult = operate(secondResult, filteredNumberValues[3], filteredOperatorValues[2]);
           break;
       
         default:
@@ -171,7 +194,19 @@ clearButton.addEventListener('click', () => {
   
   });
  
-equalButton.addEventListener('click', getMathResult);
+equalButton.addEventListener('click', () => {
+    
+    const inputString = mathDisplay.textContent;
+    const[filteredNumberValues, filteredOperatorValues, numLength, operatorLength] = filterNumberOperatorObject(inputString); 
+    
+    getMathResult(filteredNumberValues, filteredOperatorValues, numLength, operatorLength);
+});
   
   
-  
+inputButton.addEventListener('click', () => {
+    
+    const userInputString = getUserInput();
+    const[filteredNumberValues, filteredOperatorValues, numLength, operatorLength] = filterNumberOperatorObject(userInputString); 
+    
+    getMathResult(filteredNumberValues, filteredOperatorValues, numLength, operatorLength);
+});
